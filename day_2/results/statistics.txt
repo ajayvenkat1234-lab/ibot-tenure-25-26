@@ -1,0 +1,9 @@
+Number of circles : 5 
+Min radius : 41 
+Max radius : 71 
+Avg radius : 55.2 
+ 1 : x_coord=124 , y_coord = 322 , radius = 71 
+ 2 : x_coord=154 , y_coord = 186 , radius = 58 
+ 3 : x_coord=274 , y_coord = 270 , radius = 62 
+ 4 : x_coord=276 , y_coord = 148 , radius = 41 
+ 5 : x_coord=196 , y_coord = 62 , radius = 44 
