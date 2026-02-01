@@ -25,10 +25,13 @@ class Sketch_GUI:
         self.original_img=None
         self.processed_img=None
 
+        #Making window size = screen size
+        self.root.state("zoomed")
+
         #blur slider
         self.label_blur = tk.Label(root, text="Blur Kernel Size:",font=("Arial",20))
         self.label_blur.pack()
-        self.slider_blur = tk.Scale(root, from_=1, to=99, orient=tk.HORIZONTAL, command=self.update_preview,length=400)
+        self.slider_blur = tk.Scale(root, from_=1, to=99,resolution=2, orient=tk.HORIZONTAL, command=self.update_preview,length=400)
         self.slider_blur.set(21) 
         self.slider_blur.pack(pady=2)
 
@@ -78,12 +81,10 @@ class Sketch_GUI:
 
         #blur_kernel    
         k = self.slider_blur.get()
-        k = k if k % 2 != 0 else k + 1
 
         sketch_img=pencil_sketch(self.original_img,k)
         self.processed_img = sketch_img
         
-        # Convert OpenCV BGR to Tkinter PhotoImage
         img = Image.fromarray(self.processed_img)
         img_w, img_h = img.size
         screen_w = self.root.winfo_screenwidth()
@@ -241,9 +242,7 @@ def video_capture(video_path,save_path,type_of_sketch,blur_kernel=21):
     writer=cv2.VideoWriter(save_path,fourcc,fps,(frame_width,frame_height),isColor=x)
 
     cv2.namedWindow('sketch video', cv2.WINDOW_NORMAL)
-    screen_w = int(10 * cv2.getWindowImageRect('sketch video')[2])
-    screen_h = int(30 * cv2.getWindowImageRect('sketch video')[3])
-    cv2.resizeWindow('sketch video', screen_w, screen_h)
+    cv2.setWindowProperty("sketch video",cv2.WND_PROP_FULLSCREEN,cv2.WINDOW_FULLSCREEN)
 
     #progress bar is shows using tqdm
     with tqdm(total=total_frames,desc="processing video",leave=False) as pbar:
@@ -276,7 +275,8 @@ def video_capture(video_path,save_path,type_of_sketch,blur_kernel=21):
     cap.release()
     writer.release()
     cv2.destroyAllWindows()
-    print(f"video saved to: {save_path}")
+    if save_path is not None:
+        print(f"video saved to: {save_path}")
 
 def main():
     try:
@@ -291,22 +291,12 @@ def main():
     
     if option == 4:
         root=tk.Tk()
-        root.lift()
 
+        #Popup
+        root.lift()
         root.attributes('-topmost', True)
         root.after(100, lambda: root.attributes('-topmost', False))
         root.focus_force()
-
-        #Aligning the window to the center of the screen
-        screen_w = root.winfo_screenwidth()
-        screen_h = root.winfo_screenheight()
-
-        win_w = int(root.winfo_screenwidth())
-        win_h = int(root.winfo_screenheight())
-        x = (screen_w - win_w) // 2
-        y = (screen_h - win_h) // 2
-
-        root.geometry(f"{win_w}x{win_h}+{x}+{y}")
 
         gui=Sketch_GUI(root)
         root.mainloop()
