@@ -9,7 +9,7 @@ void setup() {
 
 void loop() {
   soundVal = digitalRead(soundPin);
-  if(soundVal == HIGH){
+  if(soundVal == HIGH){ 
     Serial.println("works");
     digitalWrite(LED_BUILTIN , HIGH);
     delay(2000);
